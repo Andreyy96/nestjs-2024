@@ -1,5 +1,5 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 import { UsersAdminService } from './users-admin.service';
 
@@ -8,6 +8,7 @@ import { UsersAdminService } from './users-admin.service';
 export class UsersAdminController {
   constructor(private readonly usersService: UsersAdminService) {}
 
+  @ApiBearerAuth()
   @Post('ban')
   ban(@Body() dto: any) {
     return this.usersService.ban(dto.id);
