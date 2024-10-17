@@ -10,8 +10,8 @@ import {
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 import { ArticlesService } from './articles.service';
-import { CreateArticleReqDto } from './dto/req/create-article.req.dto';
-import { UpdateArticleReqDto } from './dto/req/update-article.req.dto';
+import { CreateArticleReqDto } from './models/dto/req/create-article.req.dto';
+import { UpdateArticleReqDto } from './models/dto/req/update-article.req.dto';
 
 @ApiBearerAuth()
 @ApiTags('Articles')

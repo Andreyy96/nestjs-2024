@@ -1,10 +1,20 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 
-import { ArticlesModule } from './articles/articles.module';
-import { CommentsModule } from './comments/comments.module';
-import { UsersModule } from './users/users.module';
+import configuration from './configs/configuration';
+import { ArticlesModule } from './modules/articles/articles.module';
+import { CommentsModule } from './modules/comments/comments.module';
+import { UsersModule } from './modules/users/users.module';
 
 @Module({
-  imports: [UsersModule, ArticlesModule, CommentsModule],
+  imports: [
+    ConfigModule.forRoot({
+      load: [configuration],
+      isGlobal: true,
+    }),
+    UsersModule,
+    ArticlesModule,
+    CommentsModule,
+  ],
 })
 export class AppModule {}
