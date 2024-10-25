@@ -1,91 +1,38 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform, Type } from 'class-transformer';
-import {
-  IsArray,
-  IsBoolean,
-  IsEmail,
-  IsEnum,
-  IsInt,
-  IsNotIn,
-  IsOptional,
-  IsString,
-  Length,
-  Matches,
-  Max,
-  Min,
-  ValidateIf,
-  ValidateNested,
-} from 'class-validator';
+import { IsEnum, IsOptional, IsString, Length, Matches } from 'class-validator';
 
 import { TransformHelper } from '../../../../../common/helpers/transform.helper';
 import { GenderEnum } from '../../enums/gender.enum';
 
-export class CarBaseReqDto {
-  @Transform(TransformHelper.trim)
-  @Transform(TransformHelper.toLowerCase)
-  @IsString()
-  @Length(3, 50)
-  producer: string;
-
-  @Transform(TransformHelper.trim)
-  @Transform(TransformHelper.toLowerCase)
-  @IsString()
-  @Length(3, 50)
-  model: string;
-
-  @ApiProperty({ example: 2021 })
-  @Type(() => Number)
-  @IsInt()
-  @Min(1900)
-  year: number;
-}
-
-export class UserBaseReqDto {
-  @Transform(TransformHelper.trim)
-  @Transform(TransformHelper.toLowerCase)
-  @IsString()
-  @Length(3, 50)
-  name: string;
-
-  @Type(() => Number)
-  @IsInt()
-  @Min(1)
-  @Max(150)
+export class BaseUserReqDto {
   @IsOptional()
-  age?: number;
-
-  @ApiProperty({ example: 'string@test.com' })
-  @Transform(TransformHelper.trim)
-  @Transform(TransformHelper.toLowerCase)
-  @ValidateIf((obj) => !obj.phone)
   @IsString()
-  @IsEmail()
+  @Length(3, 50)
+  @Transform(TransformHelper.trim)
+  @Type(() => String)
+  name?: string;
+
+  @IsOptional()
+  @IsString()
+  @IsEnum(GenderEnum)
+  @Length(0, 300)
+  bio?: string;
+
+  @IsOptional()
+  @IsString()
+  @Length(0, 3000)
+  image?: string;
+
+  @ApiProperty({ example: 'test@gmail.com' })
+  @IsString()
+  @Length(0, 300)
+  @Matches(/^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/)
   email: string;
 
-  @Transform(TransformHelper.trim)
-  @ValidateIf((obj) => !obj.email)
+  @ApiProperty({ example: '123qwe!@#QWE' })
   @IsString()
-  phone: string;
-
-  @IsOptional()
-  @IsEnum(GenderEnum)
-  gender: GenderEnum;
-
-  @IsBoolean()
-  @IsOptional()
-  isStudent: boolean = false;
-
-  @ApiProperty({ example: '12qw4qeASD' })
-  @Transform(TransformHelper.trim)
-  @IsNotIn(['password', '123456', 'qwerty'])
-  @Matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/, {
-    message:
-      'Password must contain at least 1 letter, 1 number, and be at least 8 characters long',
-  })
+  @Length(0, 300)
+  @Matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%_*#?&])[A-Za-z\d@$_!%*#?&]{8,}$/)
   password: string;
-
-  @ValidateNested({ each: true })
-  @IsArray()
-  @Type(() => CarBaseReqDto)
-  cars: CarBaseReqDto[];
 }
