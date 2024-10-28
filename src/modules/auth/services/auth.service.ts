@@ -52,7 +52,10 @@ export class AuthService {
   }
 
   public async signIn(dto: SignInReqDto): Promise<AuthResDto> {
-    const user = await this.userRepository.findOneBy({ email: dto.email });
+    const user = await this.userRepository.findOne({
+      where: { email: dto.email },
+      select: ['id', 'password'],
+    });
 
     if (!user) {
       throw new UnauthorizedException();

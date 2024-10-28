@@ -8,6 +8,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
+import { ArticleID, UserID } from '../../common/types/entity-ids.type';
 import { CommentEntity } from './comment.entity';
 import { TableNameEnum } from './enums/table-name.enum';
 import { LikeEntity } from './like.entity';
@@ -18,7 +19,7 @@ import { UserEntity } from './user.entity';
 @Entity(TableNameEnum.ARTICLES)
 export class ArticleEntity extends CreateUpdateModel {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id: ArticleID;
 
   @Column('text')
   title: string;
@@ -33,7 +34,7 @@ export class ArticleEntity extends CreateUpdateModel {
   likes?: LikeEntity[];
 
   @Column()
-  user_id: string;
+  user_id: UserID;
   @ManyToOne(() => UserEntity, (entity) => entity.articles)
   @JoinColumn({ name: 'user_id' })
   user?: UserEntity;
