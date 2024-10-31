@@ -7,9 +7,12 @@ import {
   ParseUUIDPipe,
   Patch,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 import { UserID } from '../../common/types/entity-ids.type';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import { SkipAuth } from '../auth/decorators/skip-auth.decorator';
+import { IUserData } from '../auth/models/interfaces/user-data.interface';
 import { UpdateUserReqDto } from './models/dto/req/update-user.req.dto';
 import { UsersService } from './services/users.service';
 
@@ -18,26 +21,39 @@ import { UsersService } from './services/users.service';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @SkipAuth()
   @Get()
   public async findAll() {
     return this.usersService.findAll();
   }
 
-  @Get(':id')
-  public async findOne(@Param('id', ParseUUIDPipe) id: UserID) {
-    return this.usersService.findOne(id);
+  @ApiBearerAuth()
+  @Get('me')
+  public async getMe(@CurrentUser() userData: IUserData) {
+    return await this.usersService.getMe(userData);
   }
 
-  @Patch(':id')
-  public async update(
-    @Param('id', ParseUUIDPipe) id: UserID,
+  @ApiBearerAuth()
+  @Patch('me')
+  public async updateMe(
+    @CurrentUser() userData: IUserData,
     @Body() updateUserDto: UpdateUserReqDto,
   ) {
-    return this.usersService.update(id, updateUserDto);
+    return await this.usersService.updateMe(userData, updateUserDto);
   }
 
-  @Delete(':id')
-  public async remove(@Param('id', ParseUUIDPipe) id: UserID) {
-    return this.usersService.remove(id);
+  @ApiBearerAuth()
+  @Delete('me')
+  public async remove(@CurrentUser() userData: IUserData) {
+    return await this.usersService.removeMe(userData);
+  }
+
+  @SkipAuth()
+  @Get(':userId')
+  public async findOne(
+    @Param('userId', ParseUUIDPipe) userId: UserID,
+  ): Promise<UserBaseResDto> {
+    const result = await this.usersService.findOne(userId);
+    return UserMapper.toResDto(result);
   }
 }
