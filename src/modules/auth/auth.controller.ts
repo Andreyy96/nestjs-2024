@@ -28,6 +28,7 @@ export class AuthController {
     return this.authService.signIn(dto);
   }
 
+  @ApiBearerAuth()
   @Post('sign-out')
   public async signOut(@CurrentUser() userData: IUserData): Promise<void> {
     return await this.authService.signOut(userData);

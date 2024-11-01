@@ -14,6 +14,8 @@ import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { SkipAuth } from '../auth/decorators/skip-auth.decorator';
 import { IUserData } from '../auth/models/interfaces/user-data.interface';
 import { UpdateUserReqDto } from './models/dto/req/update-user.req.dto';
+import { UserBaseResDto } from './models/dto/res/user-base.res.dto';
+import { UserMapper } from './services/user.mapper';
 import { UsersService } from './services/users.service';
 
 @ApiTags('Users')
