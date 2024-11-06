@@ -6,6 +6,7 @@ import {
   Param,
   ParseUUIDPipe,
   Patch,
+  Post,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
@@ -23,16 +24,10 @@ import { UsersService } from './services/users.service';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @SkipAuth()
-  @Get()
-  public async findAll() {
-    return this.usersService.findAll();
-  }
-
   @ApiBearerAuth()
   @Get('me')
   public async getMe(@CurrentUser() userData: IUserData) {
-    return await this.usersService.getMe(userData);
+    return await this.usersService.findMe(userData);
   }
 
   @ApiBearerAuth()
@@ -57,5 +52,23 @@ export class UsersController {
   ): Promise<UserBaseResDto> {
     const result = await this.usersService.findOne(userId);
     return UserMapper.toResDto(result);
+  }
+
+  @ApiBearerAuth()
+  @Post(':userId/follow')
+  public async follow(
+    @Param('userId', ParseUUIDPipe) userId: UserID,
+    @CurrentUser() userData: IUserData,
+  ): Promise<void> {
+    await this.usersService.follow(userData, userId);
+  }
+
+  @ApiBearerAuth()
+  @Delete(':userId/follow')
+  public async unfollow(
+    @Param('userId', ParseUUIDPipe) userId: UserID,
+    @CurrentUser() userData: IUserData,
+  ): Promise<void> {
+    await this.usersService.unfollow(userData, userId);
   }
 }
