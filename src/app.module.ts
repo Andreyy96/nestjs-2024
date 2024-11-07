@@ -7,6 +7,7 @@ import configuration from './configs/configuration';
 import { ArticlesModule } from './modules/articles/articles.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { CommentsModule } from './modules/comments/comments.module';
+import { FileStorageModule } from './modules/file-storage/file-storage.module';
 import { LoggerModule } from './modules/logger/logger.module';
 import { PostgresModule } from './modules/postgres/postgres.module';
 import { RedisModule } from './modules/redis/redis.module';
@@ -24,6 +25,7 @@ import { UsersModule } from './modules/users/users.module';
     PostgresModule,
     RedisModule,
 
+    FileStorageModule,
     AuthModule,
     UsersModule,
     ArticlesModule,
